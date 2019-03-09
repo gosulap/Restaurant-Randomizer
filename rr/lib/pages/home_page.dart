@@ -16,24 +16,25 @@ class HomePageState extends State<HomePage>{
   @override 
   Widget build(BuildContext context){
     // children are on top of one another on a stack 
-    return new Stack(
-      children: <Widget>[
+
         // this column will have the two buttons and the question that is to be displayed 
         // essentially our main page 
-        new Column(
+        return new Column(
           children: <Widget>[
-              new Text(test()), 
+              new Text("Test", style: new TextStyle(color: Colors.white)), 
           ],
-        ),
-      ],
-    );
+        );
+ 
   }
 
-  Future<String> test() async {
+
+  String testAgain(LocationData location){
+    return location.longitude.toString(); 
+  }
+  Future<void> test() async {
   
-     var testLocation = await location.getLocation();
-     print(testLocation.longitude.toString()); 
-     return testLocation.latitude.toString(); 
+     await location.getLocation().then(testAgain);
+     
   }
 
 }
