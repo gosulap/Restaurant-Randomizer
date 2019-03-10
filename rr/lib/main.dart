@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart' ; 
 import 'package:dio/dio.dart'; 
+import 'package:http/http.dart' as http; 
 
 
 void main() => runApp(MyApp());
@@ -27,6 +28,7 @@ class MyAppState extends State<MyApp>{
 
   // string for the final answer 
   String goHere = ""; 
+  var test; 
 
   // sets up the state with the current location 
   @override
@@ -42,27 +44,10 @@ class MyAppState extends State<MyApp>{
         currentLocation = result; 
       });
     });
+
+    print(currentLocation); 
   }
 
-  @override 
-  void didChangeDependencies() async {
-    super.didChangeDependencies(); 
-    print(await searchNearBy('bagel')); 
-  }
-
-  Future<List<String>> searchNearBy(String keyword) async {
-    var dio = Dio(); 
-    var url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"; 
-    var parameters = {
-      'key' : "AIzaSyA6LYlJFjgHgaftXDrKNkrmcjJWzyU4Rfg",
-      'location': "40.748445, -73.9878531",
-      'radius': '8000',
-      'keyword': keyword
-    }; 
-
-    var response = await dio.get(url, data:parameters); 
-    return response.data['results'].map<String>((result) => result['name'].toString()).toList(); 
-  }
 
   @override 
   Widget build(BuildContext context) {
@@ -103,9 +88,9 @@ class MyAppState extends State<MyApp>{
   }
 
   void findFood(){
-    // in here call the api and choose a random place 
+    // in here call the api and choose a random place
     setState(() {
-     goHere = "Here" ; 
+     goHere = "gohere"; 
     });
   }
 
