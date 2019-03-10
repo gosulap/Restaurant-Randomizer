@@ -28,17 +28,18 @@ class MyAppState extends State<MyApp>{
 
     initPlatformState(); 
     locationSubscription = location.onLocationChanged().listen((Map<String,double> result){
-      setState(() {
+      setState(() { 
         currentLocation = result; 
       });
     }); 
+    print(currentLocation['latitude']);
   }
 
   @override 
   Widget build(BuildContext context) {
     return new MaterialApp(
       home: new Scaffold(
-        appBar: new AppBar(title: Text("Location"),),
+        appBar: new AppBar(title: Text("Location")),
         body:Center(
           child:Column(
             mainAxisAlignment: MainAxisAlignment.center,
