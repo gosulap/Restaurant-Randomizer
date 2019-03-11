@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import './place.dart'; 
 import 'dart:async'; 
 import 'dart:convert'; 
+import 'dart:math'; 
 
 
 void main() => runApp(MyApp());
@@ -32,6 +33,8 @@ class MyAppState extends State<MyApp>{
   String goHere = ""; 
   var test; 
 
+  List<Place> allLocations; 
+
 
   // sets up the state with the current location 
   @override
@@ -48,6 +51,7 @@ class MyAppState extends State<MyApp>{
       });
     });
 
+    findFood(); 
     print(currentLocation); 
   }
 
@@ -73,7 +77,7 @@ class MyAppState extends State<MyApp>{
                 min: 1.0
               ), 
               Text(distanceMessage),
-              RaisedButton(child:Text("Search"),onPressed: findFood,),
+              RaisedButton(child:Text("Search"),onPressed: getFinalLocation,),
               Text("You should eat at: ${goHere}"),
             ],
           )
@@ -93,7 +97,9 @@ class MyAppState extends State<MyApp>{
   void findFood(){
     print("hello"); 
     getNearby().then((data){
-      print("made it");
+      setState(() {
+       allLocations = data;  
+      });
     }).catchError((e){
       print(e); 
     });
@@ -101,9 +107,14 @@ class MyAppState extends State<MyApp>{
 
 
   void getFinalLocation(){
-    setState(() {
-     goHere = "here"; 
-    });
+    findFood(); 
+    if(allLocations != null)
+    {
+      allLocations.shuffle();
+      setState(() {
+      goHere = allLocations[0].name; 
+      });
+    }
   }
 
   Future<List<Place>> getNearby() async{
@@ -113,9 +124,10 @@ class MyAppState extends State<MyApp>{
         var places = <Place>[]; 
 
         List data = json.decode(response.body)["results"]; 
-
+        
         for(int i =0;i<data.length;i++){
           var current = data[i]; 
+          print(current['name']); 
           places.add(new Place(current['name'],current['vicinity'])); 
         }
 
