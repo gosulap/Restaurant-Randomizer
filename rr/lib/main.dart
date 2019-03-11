@@ -34,6 +34,7 @@ class MyAppState extends State<MyApp>{
   var test; 
 
   List<Place> allLocations; 
+  double radius = 1609; 
 
 
   // sets up the state with the current location 
@@ -77,7 +78,7 @@ class MyAppState extends State<MyApp>{
                 min: 0.0
               ), 
               Text(distanceMessage),
-              RaisedButton(child:Text("Search"),onPressed: getFinalLocation,),
+              RaisedButton(child:Text("Search"),onPressed: getFinalLocation, color: Colors.blue[100],),
               Text("You should eat at: ${goHere}"),
             ],
           )
@@ -117,8 +118,8 @@ class MyAppState extends State<MyApp>{
   }
 
   Future<List<Place>> getNearby() async{
-        print(distance); 
-        var radius = (distance*1609.34); 
+        radius = (distance*1609.34); 
+        print(radius); 
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentLocation['latitude']},${currentLocation['longitude']}&radius=${radius.toString()}&type=restaurant&key=AIzaSyA6LYlJFjgHgaftXDrKNkrmcjJWzyU4Rfg"; 
         var response = await http.get(url, headers:{"Accept":"application/json"}); 
 
