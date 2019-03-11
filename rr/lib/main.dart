@@ -30,7 +30,7 @@ class MyAppState extends State<MyApp>{
   String distanceMessage = "Distance: 1.0 mile";
 
   // vars for the second slider 
-  double price = 0.0;  
+  double price = 1;  
 
   // string for the final answer 
   String goHere = ""; 
@@ -140,8 +140,9 @@ class MyAppState extends State<MyApp>{
 
   Future<List<Place>> getNearby() async{
         radius = (distance*1609.34); 
-        print(radius); 
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentLocation['latitude']},${currentLocation['longitude']}&radius=${radius.toString()}&type=restaurant&minprice=0&maxprice=${price.toString()}&key=AIzaSyA6LYlJFjgHgaftXDrKNkrmcjJWzyU4Rfg"; 
+        print(radius.toInt().toString()); 
+        
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentLocation['latitude']},${currentLocation['longitude']}&radius=${radius.toInt().toString()}&type=restaurant&maxprice=${price.toInt().toString()}&key=AIzaSyA6LYlJFjgHgaftXDrKNkrmcjJWzyU4Rfg"; 
         var response = await http.get(url, headers:{"Accept":"application/json"}); 
 
         var places = <Place>[]; 
@@ -150,6 +151,7 @@ class MyAppState extends State<MyApp>{
         
         for(int i =0;i<data.length;i++){
           var current = data[i];  
+          print(current['name']); 
           places.add(new Place(current['name'],current['vicinity'])); 
         }
 
