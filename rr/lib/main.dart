@@ -27,7 +27,7 @@ class MyAppState extends State<MyApp>{
 
   // vars for the first slider 
   double distance = 1.0; 
-  String distanceMessage = ""; 
+  String distanceMessage = "Distance: 1.0 mile"; 
 
   // string for the final answer 
   String goHere = ""; 
@@ -74,7 +74,7 @@ class MyAppState extends State<MyApp>{
                 divisions: 10,
                 label: "Slider",
                 max: 10.0,
-                min: 1.0
+                min: 0.0
               ), 
               Text(distanceMessage),
               RaisedButton(child:Text("Search"),onPressed: getFinalLocation,),
@@ -90,7 +90,7 @@ class MyAppState extends State<MyApp>{
     setState(() {
       distance = e;  
 
-      distanceMessage = "Distance: ${e.toString()} miles"; 
+      distanceMessage = "Distance: ${e.toString()} mile(s)"; 
     });
   }
 
@@ -117,8 +117,9 @@ class MyAppState extends State<MyApp>{
   }
 
   Future<List<Place>> getNearby() async{
+        print(distance); 
         var radius = (distance*1609.34); 
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=${radius.toString()}&type=restaurant&key=AIzaSyA6LYlJFjgHgaftXDrKNkrmcjJWzyU4Rfg"; 
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentLocation['latitude']},${currentLocation['longitude']}&radius=${radius.toString()}&type=restaurant&key=AIzaSyA6LYlJFjgHgaftXDrKNkrmcjJWzyU4Rfg"; 
         var response = await http.get(url, headers:{"Accept":"application/json"}); 
 
         var places = <Place>[]; 
