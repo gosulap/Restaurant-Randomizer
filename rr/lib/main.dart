@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'dart:async'; 
 import 'package:location/location.dart';
 import 'package:flutter/services.dart' ; 
 import 'package:dio/dio.dart'; 
 import 'package:http/http.dart' as http; 
+import './place.dart'; 
+import 'dart:async'; 
+import 'dart:convert'; 
 
 
 void main() => runApp(MyApp());
@@ -29,6 +31,7 @@ class MyAppState extends State<MyApp>{
   // string for the final answer 
   String goHere = ""; 
   var test; 
+
 
   // sets up the state with the current location 
   @override
@@ -88,10 +91,35 @@ class MyAppState extends State<MyApp>{
   }
 
   void findFood(){
-    // in here call the api and choose a random place
-    setState(() {
-     goHere = "gohere"; 
+    print("hello"); 
+    getNearby().then((data){
+      print("made it");
+    }).catchError((e){
+      print(e); 
     });
+  }
+
+
+  void getFinalLocation(){
+    setState(() {
+     goHere = "here"; 
+    });
+  }
+
+  Future<List<Place>> getNearby() async{
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&key=AIzaSyA6LYlJFjgHgaftXDrKNkrmcjJWzyU4Rfg"; 
+        var response = await http.get(url, headers:{"Accept":"application/json"}); 
+
+        var places = <Place>[]; 
+
+        List data = json.decode(response.body)["results"]; 
+
+        for(int i =0;i<data.length;i++){
+          var current = data[i]; 
+          places.add(new Place(current['name'],current['vicinity'])); 
+        }
+
+        return places; 
   }
 
   void initPlatformState() async{
