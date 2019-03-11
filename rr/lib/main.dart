@@ -65,7 +65,7 @@ class MyAppState extends State<MyApp>{
           child:Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("Lat/Lng: ${currentLocation['latitude']}/ ${currentLocation['longitude']}", style: TextStyle(fontSize: 20.0, color: Colors.teal),),
+              Text("How far can you go?", style: TextStyle(fontSize: 20.0, color: Colors.teal),),
               Slider(
                 value: distance,
                 onChanged: (double e) => changed(e),
@@ -95,7 +95,6 @@ class MyAppState extends State<MyApp>{
   }
 
   void findFood(){
-    print("hello"); 
     getNearby().then((data){
       setState(() {
        allLocations = data;  
@@ -118,7 +117,8 @@ class MyAppState extends State<MyApp>{
   }
 
   Future<List<Place>> getNearby() async{
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&key=AIzaSyA6LYlJFjgHgaftXDrKNkrmcjJWzyU4Rfg"; 
+        var radius = (distance*1609.34); 
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=${radius.toString()}&type=restaurant&key=AIzaSyA6LYlJFjgHgaftXDrKNkrmcjJWzyU4Rfg"; 
         var response = await http.get(url, headers:{"Accept":"application/json"}); 
 
         var places = <Place>[]; 
@@ -126,8 +126,7 @@ class MyAppState extends State<MyApp>{
         List data = json.decode(response.body)["results"]; 
         
         for(int i =0;i<data.length;i++){
-          var current = data[i]; 
-          print(current['name']); 
+          var current = data[i];  
           places.add(new Place(current['name'],current['vicinity'])); 
         }
 
