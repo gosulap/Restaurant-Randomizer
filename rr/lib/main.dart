@@ -7,6 +7,7 @@ import './place.dart';
 import 'dart:async'; 
 import 'dart:convert'; 
 import 'dart:math'; 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 void main() => runApp(MyApp());
@@ -81,18 +82,6 @@ class MyAppState extends State<MyApp>{
                 min: 0.0
               ),
               Text("Price Meter: ${price.toString()}"), 
-              Text("How far can you go?", style: TextStyle(fontSize: 20.0, color: Colors.teal),),
-              Slider(
-                value: distance,
-                onChanged: (double e) => changed(e),
-                activeColor: Colors.red,
-                inactiveColor: Colors.grey,
-                divisions: 10,
-                label: "Slider",
-                max: 5.0,
-                min: 0.0
-              ), 
-              Text(distanceMessage),
               RaisedButton(child:Text("Search"),onPressed: getFinalLocation, color: Colors.blue[100],),
               Text("You should eat at: ${goHere}"),
             ],
@@ -100,14 +89,6 @@ class MyAppState extends State<MyApp>{
         )
       )
     ); 
-  }
-
-  void changed(e){
-    setState(() {
-      distance = e;  
-
-      distanceMessage = "Distance: ${e.toString()} mile(s)"; 
-    });
   }
 
   void changedp(e){
@@ -142,7 +123,7 @@ class MyAppState extends State<MyApp>{
         radius = (distance*1609.34); 
         print(radius.toInt().toString()); 
         
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentLocation['latitude']},${currentLocation['longitude']}&radius=${radius.toInt().toString()}&type=restaurant&maxprice=${price.toInt().toString()}&key=AIzaSyA6LYlJFjgHgaftXDrKNkrmcjJWzyU4Rfg"; 
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentLocation['latitude']},${currentLocation['longitude']}&rankby=distance&type=restaurant&maxprice=${price.toInt().toString()}&key="+ DotEnv().env['GPAPIKEY']; 
         var response = await http.get(url, headers:{"Accept":"application/json"}); 
 
         var places = <Place>[]; 
