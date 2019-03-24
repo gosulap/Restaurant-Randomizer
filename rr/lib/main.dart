@@ -132,7 +132,6 @@ class MyAppState extends State<MyApp>{
         
         for(int i =0;i<data.length;i++){
           var current = data[i];  
-          print(current['name']); 
           places.add(new Place(current['name'],current['vicinity'])); 
         }
 
